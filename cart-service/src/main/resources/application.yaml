@@ -1,14 +1,13 @@
 server:
-  port: 8081  # 每个服务单独端口
+  port: 8082  # 每个服务单独端口
 spring:
   application:
-    name: item-service  # 唯一标识服务,自定设定
+    name: cart-service  # 唯一标识服务,自定设定
   profiles:
     active: local
   datasource:
-    # 设置不同服务的mysql服务的端口,  且此处的hm-item为要使用的数据库
-#    url: jdbc:mysql://172.27.215.171:3306/hm-item?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
-    url: jdbc:mysql://${hm.db.host}:3306/hm-item?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
+    # 设置不同服务的mysql服务的端口,  且此处的hm-cart为要使用的数据库
+    url: jdbc:mysql://${hm.db.host}:3306/hm-cart?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: ${hm.db.pw}
@@ -29,8 +28,8 @@ logging:
 knife4j:
   enable: true
   openapi:
-    title: xiaoR商城商品接口文档
-    description: "xiaoR商城商品接口文档"
+    title: xiaoR商城购物车接口文档
+    description: "xiaoR商城购物车接口文档"
     email: r19936083569@163.com
     concat: xiaoR
     url: https://www.itcast.cn
@@ -40,5 +39,5 @@ knife4j:
         group-name: default
         api-rule: package
         api-rule-resources:
-          - com.hmall.item.controller
+          - com.hmall.cart.controller
 # keytool -genkeypair -alias hmall -keyalg RSA -keypass hmall123 -keystore hmall.jks -storepass hmall123
