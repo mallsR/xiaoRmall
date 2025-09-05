@@ -1,9 +1,11 @@
 package com.hmall.cart.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hmall.cart.domain.dto.CartFormDTO;
+import com.hmall.cart.domain.dto.ItemDTO;
 import com.hmall.cart.domain.po.Cart;
 import com.hmall.cart.domain.vo.CartVO;
 import com.hmall.cart.mapper.CartMapper;
@@ -13,7 +15,12 @@ import com.hmall.common.utils.BeanUtils;
 import com.hmall.common.utils.CollUtils;
 import com.hmall.common.utils.UserContext;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Collection;
 import java.util.List;
@@ -26,15 +33,29 @@ import java.util.stream.Collectors;
  * <p>
  * 订单详情表 服务实现类
  * </p>
- *
- * @author 虎哥
- * @since 2023-05-05
  */
 @Service
 @RequiredArgsConstructor
 public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements ICartService {
 
 //    private final IItemService itemService;
+
+    /**
+     * restTemplate注入方式的对比
+     */
+    // 此种方式为字段注入, Spring是不推荐的,其推荐使用构造函数的方式注入
+    /*@Autowired
+    private RestTemplate restTemplate;*/
+
+    // 此种方式的问题在于需要注入的对象特别多时,可能需要对应不同情况,生成许多的构造函数
+    // 虽然阔以使用Lombok的@AllArgsConstructor自动生成全参数的构造函数,但如果有些属性是常量,其也会自动将其也添加到构造函数中
+    /*private RestTemplate restTemplate;
+    public CartServiceImpl(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }*/
+
+    // 推荐采用: 将需要注入的对象声明为常量,并利用@RequiredArgsConstructor生成一个仅包含所有常量的构造函数
+    private final RestTemplate restTemplate;
 
     @Override
     public void addItem2Cart(CartFormDTO cartFormDTO) {
@@ -78,11 +99,25 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements IC
     }
 
     private void handleCartItems(List<CartVO> vos) {
-        // xky001 TODO 2025/9/4: 此处涉及商品服务，后续再做
-        /*// 1.获取商品id
+        // 1.获取商品id
         Set<Long> itemIds = vos.stream().map(CartVO::getItemId).collect(Collectors.toSet());
         // 2.查询商品
-        List<ItemDTO> items = itemService.queryItemByIds(itemIds);
+//        List<ItemDTO> items = itemService.queryItemByIds(itemIds);
+        // 2.1 利用restTemplate发送http请求,得到http响应
+        ResponseEntity<List<ItemDTO>> res = restTemplate.exchange(
+                "http://localhost:8081/items?ids={ids}",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<ItemDTO>>() {
+                },
+                Map.of("ids", CollUtil.join(itemIds, ","))
+        );
+        // 2.2 解析响应
+        if (!res.getStatusCode().is2xxSuccessful()) {
+            // 查询失败,直接结束
+            return;
+        }
+        List<ItemDTO> items = res.getBody();
         if (CollUtils.isEmpty(items)) {
             return;
         }
@@ -97,7 +132,7 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements IC
             v.setNewPrice(item.getPrice());
             v.setStatus(item.getStatus());
             v.setStock(item.getStock());
-        }*/
+        }
     }
 
     @Override
