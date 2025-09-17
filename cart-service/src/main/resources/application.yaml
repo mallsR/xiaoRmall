@@ -7,7 +7,7 @@ spring:
     active: local
   datasource:
     # 设置不同服务的mysql服务的端口,  且此处的hm-cart为要使用的数据库
-    url: jdbc:mysql://${hm.db.host}:3306/hm-cart?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://${hm.db.host}:3306/hm-cart?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: ${hm.db.pw}
@@ -46,4 +46,4 @@ knife4j:
 # keytool -genkeypair -alias hmall -keyalg RSA -keypass hmall123 -keystore hmall.jks -storepass hmall123
 feign:
   okhttp:   # okhttp连接池
-    enable: true
+    enable: true  # 开启连接池支持
