@@ -1,0 +1,47 @@
+server:
+  port: 8086  # 每个服务单独端口
+spring:
+  application:
+    name: order-service  # 唯一标识服务,自定设定
+  profiles:
+    active: local
+  datasource:
+    # 设置不同服务的mysql服务的端口,  且此处的hm-item为要使用的数据库
+#    url: jdbc:mysql://172.27.215.171:3306/hm-item?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://${hm.db.host}:3306/hm-trade?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: ${hm.db.pw}
+  cloud:
+    nacos:  # nacos注册中心的服务配置: 后续需要向nacos请求注册服务
+      server-addr: 172.27.215.171:8848
+mybatis-plus:
+  configuration:
+    default-enum-type-handler: com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler
+  global-config:
+    db-config:
+      update-strategy: not_null
+      id-type: auto
+logging:
+  level:
+    com.hmall: debug
+  pattern:
+    dateformat: HH:mm:ss:SSS
+  file:
+    path: "logs/${spring.application.name}"
+knife4j:
+  enable: true
+  openapi:
+    title: xiaoR商城交易接口文档
+    description: "xiaoR商城交易接口文档"
+    email: r19936083569@163.com
+    concat: xiaoR
+    url: https://www.itcast.cn
+    version: v1.0.0
+    group:
+      default:
+        group-name: default
+        api-rule: package
+        api-rule-resources:
+          - com.hmall.trade.controller
+# keytool -genkeypair -alias hmall -keyalg RSA -keypass hmall123 -keystore hmall.jks -storepass hmall123
