@@ -28,5 +28,9 @@ spring:
           uri: lb://pay-service
           predicates:
             - Path=/pay-orders/**
+      # 无参数的构造器工厂
+#      default-filters:
+#        - PrintAny
+      # 有参数的构造器工厂
       default-filters:
-        - PrintAny
+        - PrintAny=1,2,3
