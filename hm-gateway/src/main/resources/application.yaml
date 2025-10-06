@@ -34,3 +34,15 @@ spring:
       # 有参数的构造器工厂
       default-filters:
         - PrintAny=1,2,3
+hm:
+  jwt:  # jwt令牌所需的密钥文件的配置信息
+    location: classpath:hmall.jks
+    alias: hmall
+    password: hmall123
+    tokenTTL: 30m
+  auth:  # 不需进行登录校验的路径
+    excludePaths:
+      - /search/**
+      - /users/login
+      - /items/**
+      - /hi
