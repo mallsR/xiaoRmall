@@ -67,11 +67,14 @@ public class AutoGlobalFilter implements GlobalFilter, Ordered{
             return response.setComplete();
         }
 
-        // 5. 传递用户信息 todo
-        System.out.println("登录时, 用户id: " + userId);
+        // 5. 传递用户信息
+        String userInfo = userId.toString();
+        ServerWebExchange serverWebExchange = exchange.mutate()
+                .request(builder -> builder.header("user-info", userInfo))
+                .build();
 
         // 6. 放行
-        return chain.filter(exchange);
+        return chain.filter(serverWebExchange);
     }
 
     /**
