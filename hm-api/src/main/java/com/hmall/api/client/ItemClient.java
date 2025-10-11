@@ -16,6 +16,6 @@ public interface ItemClient {
     @GetMapping("/items")
     List<ItemDTO> queryItemsByIds(@RequestParam("ids") Set<Long> ids);
 
-    @PutMapping("/stock/deduct")
+    @PutMapping("/items/stock/deduct")
     void deductStock(@RequestBody List<OrderDetailDTO> items);
 }
