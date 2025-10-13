@@ -1,49 +1,20 @@
 server:
   port: 8082  # 每个服务单独端口
-spring:
-  application:
-    name: cart-service  # 唯一标识服务,自定设定
-  profiles:
-    active: local
-  datasource:
-    # 设置不同服务的mysql服务的端口,  且此处的hm-cart为要使用的数据库
-    url: jdbc:mysql://${hm.db.host}:3306/hm-cart?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password: ${hm.db.pw}
-  cloud:
-    nacos:  # nacos服务注册
-      server-addr: 172.27.215.171:8848  # 后续需要向nacos请求注册服务
-mybatis-plus:
-  configuration:
-    default-enum-type-handler: com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler
-  global-config:
-    db-config:
-      update-strategy: not_null
-      id-type: auto
-logging:
-  level:
-    com.hmall: debug
-  pattern:
-    dateformat: HH:mm:ss:SSS
-  file:
-    path: "logs/${spring.application.name}"
-knife4j:
-  enable: true
-  openapi:
-    title: xiaoR商城购物车接口文档
-    description: "xiaoR商城购物车接口文档"
-    email: r19936083569@163.com
-    concat: xiaoR
-    url: https://www.itcast.cn
-    version: v1.0.0
-    group:
-      default:
-        group-name: default
-        api-rule: package
-        api-rule-resources:
-          - com.hmall.cart.controller
-# keytool -genkeypair -alias hmall -keyalg RSA -keypass hmall123 -keystore hmall.jks -storepass hmall123
+
+# 让spring-boot启动时忽略nacos的配置检查, 才能导入bootstrap.yaml的配置
+# https://blog.csdn.net/a_smart_lin/article/details/137335343
+#spring:
+#  cloud:
+#    nacos:
+#      config:
+#        import-check:
+#          enabled: false
 feign:
   okhttp:   # okhttp连接池
     enable: true  # 开启连接池支持
+hm:
+  db:
+    database: hm-cart
+  swagger:
+    title: "xiaoR商城购物车服务接口文档"
+    package: com.hm.cart.controller
