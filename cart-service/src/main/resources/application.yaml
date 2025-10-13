@@ -1,14 +1,5 @@
 server:
   port: 8082  # 每个服务单独端口
-
-# 让spring-boot启动时忽略nacos的配置检查, 才能导入bootstrap.yaml的配置
-# https://blog.csdn.net/a_smart_lin/article/details/137335343
-#spring:
-#  cloud:
-#    nacos:
-#      config:
-#        import-check:
-#          enabled: false
 feign:
   okhttp:   # okhttp连接池
     enable: true  # 开启连接池支持
