@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: gateway  # 唯一标识服务,自定设定
+  profiles:
+    active: local
+  cloud:
+    nacos:  # nacos服务注册
+      server-addr: 172.27.215.171:8848  # 后续需要向nacos请求注册服务
+      config:
+        file-extension: yaml
+        shared-configs:
+          - dataId: shared-log.yaml  # 共享日志配置
+        # 让spring-boot启动时忽略nacos的配置检查, 才能导入bootstrap.yaml的配置
+        # https://blog.csdn.net/a_smart_lin/article/details/137335343
+        import-check:
+          enabled: false

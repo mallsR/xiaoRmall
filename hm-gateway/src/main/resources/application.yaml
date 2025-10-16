@@ -1,39 +1,5 @@
 server:
   port: 8080  # 网关端口: 唯一暴露给外部
-spring:
-  application:
-    name: gateway-service
-  cloud:
-    nacos:
-      server-addr: 172.27.215.171:8848
-    gateway:
-      routes:
-        - id: user-service  # 路由规则id，自定义，唯一
-          uri: lb://user-service  # 路由的目标服务，lb代表负载均衡，会从注册中心拉取服务列表
-          predicates:  # 路由断言，判断当前请求是否符合当前规则，符合则路由到目标服务
-            - Path=/users/**, /addresses/**  # 匹配的路径, 多个路径用逗号隔开
-        - id: item-service
-          uri: lb://item-service
-          predicates:
-            - Path=/items/**, /search/**
-        - id: cart-service
-          uri: lb://cart-service
-          predicates:
-            - Path=/carts/**
-        - id: order-service
-          uri: lb://order-service
-          predicates:
-            - Path=/orders/**
-        - id: pay-service
-          uri: lb://pay-service
-          predicates:
-            - Path=/pay-orders/**
-      # 无参数的构造器工厂
-#      default-filters:
-#        - PrintAny
-      # 有参数的构造器工厂
-      default-filters:
-        - PrintAny=1,2,3
 hm:
   jwt:  # jwt令牌所需的密钥文件的配置信息
     location: classpath:hmall.jks
